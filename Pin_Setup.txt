@@ -1,0 +1,13 @@
+SPX1276 --> ESP32
+CS		5
+D0		15
+D1		2
+SDI		23 (MOSI)
+SDO		19 (MISO)
+SCK		18 (Clock)
+RST		4
+RXEN		22
+TXEN		1 (TX0)
+
+
+# Are GPIO Numbers

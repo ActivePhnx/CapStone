@@ -11,3 +11,11 @@ TXEN		1 (TX0)
 
 
 # Are GPIO Numbers
+
+
+SPI Naming:
+MOSI = DIN = R/W = SDO = DI = SI = MTSR = SDA = D1 = SDI
+CS = CE = RS = SS
+DC = A0 = DO = DOUT = SO = MRST
+RESET = RST
+SCLK = CLK = E = SCK = SCL = D0

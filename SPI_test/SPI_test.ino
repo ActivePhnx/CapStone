@@ -2,10 +2,10 @@
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  Serial.println(MOSI);
-  Serial.println(MISO);
-  Serial.println(SCK);
-  Serial.println(SS);
+  Serial.println(MOSI); //23
+  Serial.println(MISO); //19
+  Serial.println(SCK);  //18
+  Serial.println(SS);   //5
   
 }
 

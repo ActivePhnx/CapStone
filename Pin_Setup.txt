@@ -19,3 +19,9 @@ CS = CE = RS = SS
 DC = A0 = DO = DOUT = SO = MRST
 RESET = RST
 SCLK = CLK = E = SCK = SCL = D0
+
+
+
+
+
+This Is modifying

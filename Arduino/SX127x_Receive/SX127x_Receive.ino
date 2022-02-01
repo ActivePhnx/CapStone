@@ -39,9 +39,9 @@ void setup() {
 
   // initialize SX1276 with default settings
   Serial.print(F("[SX1276] Initializing ... "));
-  int state = radio.begin();
+  int state = radio.begin(915.0, 125.0, 9, 7, 'SX127X_SYNC_WORD', 10, 8, 0);  
   if (state == RADIOLIB_ERR_NONE) {
-    Serial.println(F("success!"));
+   Serial.println(F("success!"));
   } else {
     Serial.print(F("failed, code "));
     Serial.println(state);

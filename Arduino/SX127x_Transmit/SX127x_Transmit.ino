@@ -10,11 +10,11 @@
 
 #include <RadioLib.h> //Click here to get the library: http://librarymanager/All#RadioLib
 
-// SX1276 requires the following connections:
-int pin_cs = 41;
-int pin_dio0 = 0;
-int pin_nrst = 33;
-int pin_dio1 = 34;
+// SX1276 requires the fol'lowing connections:
+int pin_cs = 5;
+int pin_dio0 = 15;
+int pin_nrst = 4;
+int pin_dio1 = 2;
 SX1276 radio = new Module(pin_cs, pin_dio0, pin_nrst, pin_dio1);
 
 void setup() {
@@ -24,8 +24,9 @@ void setup() {
   Serial.print(F("[SX1276] Initializing ... "));
   //int state = radio.begin(); //-121dBm
   //int state = radio.begin(868.0); //-20dBm
-  int state = radio.begin(915.0); //-23dBm
-  if (state == ERR_NONE) {
+  //int state = radio.begin(915.0); //-23dBm
+  int state = radio.begin(915.0, 125.0, 9, 7, 'SX127X_SYNC_WORD', 10, 8, 0);
+  if (state == RADIOLIB_ERR_NONE) {
     Serial.println(F("init success!"));
   } else {
     Serial.print(F("failed, code "));
@@ -36,7 +37,7 @@ void setup() {
   // set output power to 10 dBm (accepted range is -3 - 17 dBm)
   // NOTE: 20 dBm value allows high power operation, but transmission
   //       duty cycle MUST NOT exceed 1%
-//  if (radio.setOutputPower(20) == ERR_INVALID_OUTPUT_POWER) {
+//  if (radio.setOutputPower(20) == RADIOLIB_ERR_INVALID_OUTPUT_POWER) {
 //    Serial.println(F("Selected output power is invalid for this module!"));
 //    while (true);
 //  }
@@ -45,8 +46,8 @@ void setup() {
   // controlled via two pins (RX enable, TX enable)
   // to enable automatic control of the switch,
   // call the following method
-  int pin_rx_enable = 16;
-  int pin_tx_enable = 44;
+  int pin_rx_enable = 22;
+  int pin_tx_enable = 1;
   radio.setRfSwitchPins(pin_rx_enable, pin_tx_enable);
 }
 
@@ -63,7 +64,7 @@ void loop() {
 
   char output[50];
   sprintf(output, "Counter: %d", counter++);
-
+  Serial.print(output);
   int state = radio.transmit(output);
 
   // you can also transmit byte array up to 256 bytes long
@@ -72,7 +73,7 @@ void loop() {
     int state = radio.transmit(byteArr, 8);
   */
 
-  if (state == ERR_NONE) {
+  if (state == RADIOLIB_ERR_NONE) {
     // the packet was successfully transmitted
     Serial.println(F(" success!"));
 
@@ -81,11 +82,11 @@ void loop() {
     Serial.print(radio.getDataRate());
     Serial.println(F(" bps"));
 
-  } else if (state == ERR_PACKET_TOO_LONG) {
+  } else if (state == RADIOLIB_ERR_PACKET_TOO_LONG) {
     // the supplied packet was longer than 256 bytes
     Serial.println(F("too long!"));
 
-  } else if (state == ERR_TX_TIMEOUT) {
+  } else if (state == RADIOLIB_ERR_TX_TIMEOUT) {
     // timeout occurred while transmitting packet
     Serial.println(F("timeout!"));
 

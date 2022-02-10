@@ -8,59 +8,18 @@
 SX1276 radio = new Module(5, 15, 4, 2);
 
 // Task Handelers
-TaskHandle_t Task1;
-TaskHandle_t Task2;
+//TaskHandle_t Task1;
+//TaskHandle_t Task2;
 
-void setup() {
-  Serial.begin(9600);
+//Button
+int in = 26;
+int out = 14;
 
-  // initialize SX1276
-  Serial.print(F("[SX1276] Initializing ... "));
-  int state = radio.begin(915.0, 125.0, 9, 7, 'SX127X_SYNC_WORD', 10, 8, 0);  
-  
-  if (state == RADIOLIB_ERR_NONE) {
-   Serial.println(F("success!"));
-  } else {
-    Serial.print(F("failed, code "));
-    Serial.println(state);
-    while (true);
-  }
-
-  //Setup Both Cores
-  xTaskCreatePinnedToCore(
-                    Task1code,   /* Task function. */
-                    "Task1",     /* name of task. */
-                    10000,       /* Stack size of task */
-                    NULL,        /* parameter of the task */
-                    1,           /* priority of the task */
-                    &Task1,      /* Task handle to keep track of created task */
-                    0);          /* pin task to core 0 */                  
-  delay(500); 
-
-  //create a task that will be executed in the Task2code() function, with priority 1 and executed on core 1
-  xTaskCreatePinnedToCore(
-                    sos,   /* Task function. */
-                    "Task2",     /* name of task. */
-                    10000,       /* Stack size of task */
-                    NULL,        /* parameter of the task */
-                    1,           /* priority of the task */
-                    &Task2,      /* Task handle to keep track of created task */
-                    1);          /* pin task to core 1 */
-    delay(500); 
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
-}
-
-void sos(void * pvParameters){
+void mit(String info){
   Serial.print(F("[SX1276] Transmitting packet ... "));
-  
-  char output[50];
-  sprintf(output, "Counter: %d", counter++);
-  Serial.print(output);
-  int state = radio.transmit(output);
+
+  Serial.print(info);
+  int state = radio.transmit(info);
 
   // Testing
   if (state == RADIOLIB_ERR_NONE) {
@@ -86,6 +45,87 @@ void sos(void * pvParameters){
     Serial.println(state);
   }
 
-  // wait for a second before transmitting again
+  //Temp Testing Delay
   delay(1000);
+}
+
+void lis(){
+  Serial.print(F("[SX1276] Waiting for incoming transmission ... "));
+
+  // you can receive data as an Arduino String
+  // NOTE: receive() is a blocking method!
+  //       See example ReceiveInterrupt for details
+  //       on non-blocking reception method.
+  String str;
+  int state = radio.receive(str);
+
+  if (state == RADIOLIB_ERR_NONE) {
+    // packet was successfully received
+    Serial.println(F("success!"));
+
+    // print the data of the packet
+    Serial.print(F("[SX1276] Data:\t\t\t"));
+    Serial.println(str);
+
+    // print the RSSI (Received Signal Strength Indicator)
+    // of the last received packet
+    Serial.print(F("[SX1276] RSSI:\t\t\t"));
+    Serial.print(radio.getRSSI());
+    Serial.println(F(" dBm"));
+
+    // print the SNR (Signal-to-Noise Ratio)
+    // of the last received packet
+    Serial.print(F("[SX1276] SNR:\t\t\t"));
+    Serial.print(radio.getSNR());
+    Serial.println(F(" dB"));
+
+    // print frequency error
+    // of the last received packet
+    Serial.print(F("[SX1276] Frequency error:\t"));
+    Serial.print(radio.getFrequencyError());
+    Serial.println(F(" Hz"));
+
+  } else if (state == RADIOLIB_ERR_RX_TIMEOUT) {
+    // timeout occurred while waiting for a packet
+    Serial.println(F("timeout!"));
+
+  } else if (state == RADIOLIB_ERR_CRC_MISMATCH) {
+    // packet was received, but is malformed
+    Serial.println(F("CRC error!"));
+
+  } else {
+    // some other error occurred
+    Serial.print(F("failed, code "));
+    Serial.println(state);
+  }
+}
+
+void setup() {
+  pinMode(in, INPUT);
+  digitalWrite(out, HIGH);
+  
+  
+  Serial.begin(9600);
+
+  // initialize SX1276
+  Serial.print(F("[SX1276] Initializing ... "));
+  int state = radio.begin(915.0, 125.0, 9, 7, 'SX127X_SYNC_WORD', 10, 8, 0);  
+  
+  if (state == RADIOLIB_ERR_NONE) {
+   Serial.println(F("success!"));
+  } else {
+    Serial.print(F("failed, code "));
+    Serial.println(state);
+    while (true);
+  }
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  lis();
+}
+
+void sos(void * pvParameters){
+  
 }

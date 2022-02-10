@@ -47,6 +47,19 @@ void setup() {
     Serial.println(state);
     while (true);
   }
+
+  // set output power to 10 dBm (accepted range is -3 - 17 dBm)
+  // NOTE: 20 dBm value allows high power operation, but transmission
+  //       duty cycle MUST NOT exceed 1%
+  if (radio.setOutputPower(20) == RADIOLIB_ERR_INVALID_OUTPUT_POWER) {
+    Serial.println(F("Selected output power is invalid for this module!"));
+    while (true);
+  }
+
+  //Power Setup
+  int pin_rx_enable = 22;
+  int pin_tx_enable = 1;
+  radio.setRfSwitchPins(pin_rx_enable, pin_tx_enable);
 }
 
 void loop() {

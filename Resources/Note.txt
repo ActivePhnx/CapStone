@@ -22,6 +22,7 @@ https://cdn.sparkfun.com/assets/7/7/3/2/2/SX1276_Datasheet.pdf
             Mode Register - 4.2
             Listen Mode - 5.3
 	    RANGE - 4.1.1
+	    Module.h - https://jgromes.github.io/RadioLib/class_module.html#a1101d49f597f756141fc9de88a504f21
 Receiver enabled vs active - 3.5.2 : 
 		radio.SETTING(VAR);
 

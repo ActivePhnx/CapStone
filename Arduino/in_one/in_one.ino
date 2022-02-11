@@ -15,6 +15,8 @@ SX1276 radio = new Module(5, 15, 4, 2);
 int in = 26;
 int out = 14;
 
+String rescue = "Module ID \ Current Time";
+
 void mit(String info){
   Serial.print(F("[SX1276] Transmitting packet ... "));
 
@@ -100,16 +102,44 @@ void lis(){
   }
 }
 
+void butPress(){
+  int buttonPushCounter = 0;   // counter for the number of button presses
+  int buttonState = 0;         // current state of the button
+  int lastButtonState = 0;     // previous state of the button
+
+  while (true){
+    buttonState = digitalRead(in);
+
+    if (buttonPushCounter >= 20){
+      mit(rescue);
+    }
+    if (buttonState == HIGH) {
+      // if the current state is HIGH then the button went from off to on:
+      buttonPushCounter++;
+      Serial.println("on");
+      Serial.print("number of button pushes: ");
+      Serial.println(buttonPushCounter);
+    } else {
+      // if the current state is LOW then the button went from on to off:
+      buttonPushCounter = 0;
+      lastButtonState = 0;
+    }
+    // Delay a little bit to avoid bouncing
+    delay(50);
+  }
+  
+}
+
 void setup() {
+  Serial.begin(9600);
+  //Button Setup
   pinMode(in, INPUT);
   digitalWrite(out, HIGH);
-  
-  
-  Serial.begin(9600);
 
   // initialize SX1276
   Serial.print(F("[SX1276] Initializing ... "));
-  int state = radio.begin(915.0, 125.0, 9, 7, 'SX127X_SYNC_WORD', 10, 8, 0);  
+  // (frequency, Bandwidth, Spreading Factor, coding rate, sync word, power, preamble length, gain) 
+  int state = radio.begin(915.0, 31.25, 10, 7, 'SX127X_SYNC_WORD', 10, 17, 0);  
   
   if (state == RADIOLIB_ERR_NONE) {
    Serial.println(F("success!"));
@@ -118,14 +148,18 @@ void setup() {
     Serial.println(state);
     while (true);
   }
+  
 
+  //Set To High Power Output
+//  int pin_rx_enable = 22;
+//  int pin_tx_enable = 1;
+// if (radio.setOutputPower(20) == RADIOLIB_ERR_INVALID_OUTPUT_POWER) {
+//    Serial.println(F("Selected output power is invalid for this module!"));
+//    while (true);
+//  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  lis();
-}
-
-void sos(void * pvParameters){
-  
+  butPress();
 }

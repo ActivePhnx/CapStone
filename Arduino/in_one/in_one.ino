@@ -15,7 +15,7 @@ SX1276 radio = new Module(5, 15, 4, 2);
 int in = 26;
 int out = 14;
 
-String rescue = "Module ID \ Current Time";
+String rescue = "Module ID \ Current Time \ GPS Location";
 
 void mit(String info){
   Serial.print(F("[SX1276] Transmitting packet ... "));
@@ -48,7 +48,7 @@ void mit(String info){
   }
 
   //Temp Testing Delay
-  delay(1000);
+  delay(15000);
 }
 
 void lis(){
@@ -151,12 +151,14 @@ void setup() {
   
 
   //Set To High Power Output
-//  int pin_rx_enable = 22;
-//  int pin_tx_enable = 1;
-// if (radio.setOutputPower(20) == RADIOLIB_ERR_INVALID_OUTPUT_POWER) {
-//    Serial.println(F("Selected output power is invalid for this module!"));
+  // NOTE: 20 dBm value allows high power operation, but transmission
+  //       duty cycle MUST NOT exceed 1%
+  int pin_rx_enable = 22;
+  int pin_tx_enable = 1;
+ if (radio.setOutputPower(20) == RADIOLIB_ERR_INVALID_OUTPUT_POWER) {
+    Serial.println(F("Selected output power is invalid for this module!"));
 //    while (true);
-//  }
+  }
 }
 
 void loop() {

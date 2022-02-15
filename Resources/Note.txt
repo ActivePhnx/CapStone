@@ -55,3 +55,8 @@ State Change Detection - examples->02.Digital->StateChangeDetection
     
     
 
+To Do List:
+ 1. Measure powerdraw / Power consumption
+ 2. Write beacon loop / Figure out time intervals
+ 3. Wire in GNSS module / get that working
+ 4. Implement GNSS into big project

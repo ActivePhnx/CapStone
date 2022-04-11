@@ -79,8 +79,9 @@ void beacon(String info){
   // Testing Beacon
   int offset = 1;
   int count = 0;
+  
   while (count < 100){
-    mit(rescue);
+    mit(info);
     delay(120000 * offset);
     offset += 2;
   }
@@ -91,7 +92,7 @@ void beacon(String info){
       // About 3 days of beacon
       // Starting at 6 min to 66 min intervals
   //    while (count < 68){
-  //      mit(rescue);
+  //      mit(info);
   //      delay(360000 * offset);
   //      if (offset < 10) offset += 2;
   //    }
@@ -200,6 +201,7 @@ void loop() {
       Serial.print(F("[SX1278] Frequency error:\t"));
       Serial.print(radio.getFrequencyError());
       Serial.println(F(" Hz"));
+      beacon(str);
 
     } else if (state == RADIOLIB_ERR_CRC_MISMATCH) {
       // packet was received, but is malformed

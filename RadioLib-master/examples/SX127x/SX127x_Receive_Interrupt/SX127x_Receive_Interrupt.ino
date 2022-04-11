@@ -29,18 +29,41 @@
 // DIO0 pin:  2
 // RESET pin: 9
 // DIO1 pin:  3
-SX1278 radio = new Module(10, 2, 9, 3);
+SX1276 radio = new Module(5, 15, 4, 2);
 
 // or using RadioShield
 // https://github.com/jgromes/RadioShield
 //SX1278 radio = RadioShield.ModuleA;
+
+// flag to indicate that a packet was received
+volatile bool receivedFlag = false;
+
+// disable interrupt when it's not needed
+volatile bool enableInterrupt = true;
+
+// this function is called when a complete packet
+// is received by the module
+// IMPORTANT: this function MUST be 'void' type
+//            and MUST NOT have any arguments!
+#if defined(ESP8266) || defined(ESP32)
+  ICACHE_RAM_ATTR
+#endif
+void setFlag(void) {
+  // check if the interrupt is enabled
+  if(!enableInterrupt) {
+    return;
+  }
+
+  // we got a packet, set the flag
+  receivedFlag = true;
+}
 
 void setup() {
   Serial.begin(9600);
 
   // initialize SX1278 with default settings
   Serial.print(F("[SX1278] Initializing ... "));
-  int state = radio.begin();
+  int state = radio.begin(915.0, 31.25, 10, 7, 'SX127X_SYNC_WORD', 10, 17, 0);
   if (state == RADIOLIB_ERR_NONE) {
     Serial.println(F("success!"));
   } else {
@@ -75,28 +98,7 @@ void setup() {
   // radio.scanChannel();
 }
 
-// flag to indicate that a packet was received
-volatile bool receivedFlag = false;
 
-// disable interrupt when it's not needed
-volatile bool enableInterrupt = true;
-
-// this function is called when a complete packet
-// is received by the module
-// IMPORTANT: this function MUST be 'void' type
-//            and MUST NOT have any arguments!
-#if defined(ESP8266) || defined(ESP32)
-  ICACHE_RAM_ATTR
-#endif
-void setFlag(void) {
-  // check if the interrupt is enabled
-  if(!enableInterrupt) {
-    return;
-  }
-
-  // we got a packet, set the flag
-  receivedFlag = true;
-}
 
 void loop() {
   // check if the flag is set

@@ -25,7 +25,7 @@ void setup() {
   //int state = radio.begin(); //-121dBm
   //int state = radio.begin(868.0); //-20dBm
   //int state = radio.begin(915.0); //-23dBm
-  int state = radio.begin(915.0, 125.0, 9, 7, 'SX127X_SYNC_WORD', 10, 8, 0);
+  int state = radio.begin(915.0, 31.25, 10, 7, 'SX127X_SYNC_WORD', 10, 17, 0);
   if (state == RADIOLIB_ERR_NONE) {
     Serial.println(F("init success!"));
   } else {
@@ -37,11 +37,12 @@ void setup() {
   // set output power to 10 dBm (accepted range is -3 - 17 dBm)
   // NOTE: 20 dBm value allows high power operation, but transmission
   //       duty cycle MUST NOT exceed 1%
+  /*
   if (radio.setOutputPower(20) == RADIOLIB_ERR_INVALID_OUTPUT_POWER) {
     Serial.println(F("Selected output power is invalid for this module!"));
     while (true);
   }
-
+  */
   // some modules have an external RF switch
   // controlled via two pins (RX enable, TX enable)
   // to enable automatic control of the switch,

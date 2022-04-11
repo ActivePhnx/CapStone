@@ -34,12 +34,15 @@ SX1276 radio = new Module(5, 15, 4, 2);
 // https://github.com/jgromes/RadioShield
 //SX1278 radio = RadioShield.ModuleA;
 
+bool flag = true;
+
 void setup() {
   Serial.begin(9600);
+  pinMode(13, OUTPUT);
 
   // initialize SX1276 with default settings
   Serial.print(F("[SX1276] Initializing ... "));
-  int state = radio.begin(915.0, 125.0, 9, 7, 'SX127X_SYNC_WORD', 10, 8, 0);  
+  int state = radio.begin(915.0, 31.25, 10, 7, 'SX127X_SYNC_WORD', 10, 17, 0);  
   if (state == RADIOLIB_ERR_NONE) {
    Serial.println(F("success!"));
   } else {
@@ -48,22 +51,32 @@ void setup() {
     while (true);
   }
 
-  // set output power to 10 dBm (accepted range is -3 - 17 dBm)
-  // NOTE: 20 dBm value allows high power operation, but transmission
-  //       duty cycle MUST NOT exceed 1%
-  if (radio.setOutputPower(20) == RADIOLIB_ERR_INVALID_OUTPUT_POWER) {
-    Serial.println(F("Selected output power is invalid for this module!"));
-    while (true);
-  }
-
   //Power Setup
   int pin_rx_enable = 22;
   int pin_tx_enable = 1;
   radio.setRfSwitchPins(pin_rx_enable, pin_tx_enable);
+
+  // set output power to 10 dBm (accepted range is -3 - 17 dBm)
+  // NOTE: 20 dBm value allows high power operation, but transmission
+  //       duty cycle MUST NOT exceed 1%
+  /*
+  if (radio.setOutputPower(20) == RADIOLIB_ERR_INVALID_OUTPUT_POWER) {
+    Serial.println(F("Selected output power is invalid for this module!"));
+    while (true);
+  }
+  */
+  
 }
 
 void loop() {
   Serial.print(F("[SX1276] Waiting for incoming transmission ... "));
+  if (flag){
+    digitalWrite(13, HIGH);
+    flag = false;
+  } else {
+    digitalWrite(13, LOW);
+    flag = true;
+  }
 
   // you can receive data as an Arduino String
   // NOTE: receive() is a blocking method!

@@ -15,6 +15,7 @@ Radio Module
         Arduino Library - https://github.com/jgromes/RadioLib           
         States - https://jgromes.github.io/LoRaLib/group__status__codes.html
 	Modes - https://www.thethingsnetwork.org/forum/t/sx1276-regopmode-register-cant-change-mode/18455/3
+	Long Rage Radio - https://medium.com/home-wireless/testing-lora-radios-with-the-limesdr-mini-part-2-37fa481217ff
 
 
 https://cdn.sparkfun.com/assets/7/7/3/2/2/SX1276_Datasheet.pdf
@@ -22,7 +23,7 @@ https://cdn.sparkfun.com/assets/7/7/3/2/2/SX1276_Datasheet.pdf
             Mode Register - 4.2
             Listen Mode - 5.3
 	    RANGE - 4.1.1
-	    Module.h - https://jgromes.github.io/RadioLib/class_module.html#a1101d49f597f756141fc9de88a504f21
+// Dont Need    Module.h - https://jgromes.github.io/RadioLib/class_module.html#a1101d49f597f756141fc9de88a504f21
 Receiver enabled vs active - 3.5.2 : 
 		radio.SETTING(VAR);
 
@@ -38,7 +39,9 @@ SPI: https://www.youtube.com/watch?v=w3VIxtLPuRE
     
     ESP32 MultiTasking -
         Multi Core - https://savjee.be/2020/01/multitasking-esp32-arduino-freertos/
+	FreeRTOS - https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/freertos.html
                - https://randomnerdtutorials.com/esp32-dual-core-arduino-ide/
+		- https://github.com/espressif/vscode-esp-idf-extension/blob/master/docs/tutorial/basic_use.md
         Millis - https://www.seeedstudio.com/blog/2021/05/11/multitasking-with-arduino-millis-rtos-more/
         
         
@@ -57,6 +60,17 @@ State Change Detection - examples->02.Digital->StateChangeDetection
 
 To Do List:
  1. Measure powerdraw / Power consumption
- 2. Write beacon loop / Figure out time intervals
+ Done 2. Write beacon loop / Figure out time intervals
  3. Wire in GNSS module / get that working
  4. Implement GNSS into big project
+ 5. IN PROGRESS - Arduino Low Power - https://docs.arduino.cc/learn/electronics/low-power
+		https://randomnerdtutorials.com/esp32-deep-sleep-arduino-ide-wake-up-sources/
+
+
+
+Power Solution :
+Stepup and Converter: https://www.adafruit.com/product/1944
+	PowerBoost 1000
+	PowerBoost 500c Is more ideal; Cheaper with full functioning 
+Potenial Battery: https://www.adafruit.com/product/258
+Potenial Antenna: https://www.sparkfun.com/products/17559

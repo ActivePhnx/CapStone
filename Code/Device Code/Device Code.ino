@@ -141,14 +141,6 @@ void setup() {
 bool light = true;
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  if (light){
-    digitalWrite(13, HIGH);
-    light = false;
-  } else {
-    digitalWrite(13, LOW);
-    light = true;
-  }
 
   // Buton detection
    buttonState = digitalRead(in);
